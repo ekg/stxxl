@@ -22,12 +22,14 @@
 #include <stxxl/stable_ksort>
 #include <stxxl/vector>
 
+//typedef unsigned __int128 uint128_t;
+
 struct my_type
 {
-    typedef unsigned key_type;
+    typedef uint64_t key_type;
 
     key_type m_key;
-    char m_data[128 - sizeof(key_type)];
+    //char m_data[128 - sizeof(key_type)];
 
     key_type key() const
     {
@@ -76,11 +78,13 @@ struct Cmp
     }
 };
 
+/*
 std::ostream& operator << (std::ostream& o, const my_type& obj)
 {
     o << obj.key();
     return o;
 }
+*/
 
 int main(int argc, char** argv)
 {
@@ -116,7 +120,7 @@ int main(int argc, char** argv)
         STXXL_MSG("STXXL_PARALLEL_MULTIWAY_MERGE");
 #endif
         stxxl::syscall_file f(argv[2], stxxl::file::DIRECT | stxxl::file::RDWR);
-        unsigned memory_to_use = 50 * 1024 * 1024;
+        unsigned memory_to_use = 5 * 1024 * 1024 * 1024;
         typedef stxxl::vector<my_type, 1, stxxl::lru_pager<8>, block_size> vector_type;
         vector_type v(&f);
 
@@ -125,9 +129,10 @@ int main(int argc, char** argv)
         for(stxxl::int64 i=0; i < v.size(); i++)
             STXXL_MSG(v[i].key());
          */
-
+        /*
         STXXL_MSG("Checking order...");
         STXXL_MSG((stxxl::is_sorted(v.begin(), v.end()) ? "OK" : "WRONG"));
+        */
 
         STXXL_MSG("Sorting...");
         if (strcmp(argv[1], "sort") == 0) {
@@ -147,9 +152,10 @@ int main(int argc, char** argv)
         else {
             STXXL_MSG("Not implemented: " << argv[1]);
         }
-
+        /*
         STXXL_MSG("Checking order...");
         STXXL_MSG((stxxl::is_sorted(v.begin(), v.end()) ? "OK" : "WRONG"));
+        */
     }
 
     return 0;
